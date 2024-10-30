@@ -1,5 +1,7 @@
 # Homework 3
-Assigment that utilizes Python and Flask to perform multiple PostgreSQL queries. 
+Assigment that utilizes Python and Flask to perform multiple PostgreSQL queries. <br>
+
+The Flask server is hosted on your local machine at the following address: ``` 127.0.0.1:5000 ```
 
 ### Group
 - Dontrez Hobbs
