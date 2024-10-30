@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-
 <html>
-
-<head>
-    <title>CSCI ECU</title>
-</head>
-
-
-<body>
-
-
-    <p>{{log_html}}</p>
-
-
-</body>
+  <head>
+      <title>HW3 - Database Management</title>
+      <style>
+          table, th, td {
+            border:1px solid black;
+          }
+        </style>
+  </head>
+  <body>
+      {% if log_html %}
+        <p>{{ log_html }}</p>
+      {% else %}
+        <table>
+          <tr>
+            {% for col_name in table_title %}
+                <th>{{ col_name }}</th>
+            {% endfor %}
+          </tr>
+          {% for row in sql_table %}
+          <tr>
+            {% for col in row %}
+            <td>{{col}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table> 
+      {% endif %}
+  </body>
 </html>

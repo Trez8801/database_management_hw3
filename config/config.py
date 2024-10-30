@@ -1,5 +1,5 @@
 username='hobbsdo2001'
 password='test'
-host='127.0.0.1:5000'
+host='127.0.0.1'
 port='5432'
 database='dvdrental'

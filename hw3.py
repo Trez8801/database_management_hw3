@@ -1,10 +1,10 @@
 from flask import Flask, render_template
 import psycopg2
-import config
+from config import config
 
 app = Flask(__name__)
 
-app.route('/api/update_basket_a')
+@app.route('/api/update_basket_a')
 def update():
     try:
         connection = psycopg2.connect(
@@ -15,32 +15,48 @@ def update():
             database=config.database
         )
         cursor = connection.cursor()
-    except:
-        print('failed to connect to database')
+    except(Exception, psycopg2.Error) as error:
+        return render_template('update.html', log_html = error)
         
     try:
         query = 'INSERT INTO basket_a (a, fruit_a) VALUES (5, \'Cherry\')'
         cursor.execute(query)
         return render_template('update.html', log_html = 'Success!')
     except(Exception, psycopg2.Error) as error:
-        return render_template('update.html', log_html = record2)
+        return render_template('update.html', log_html = error)
     
     cursor.close()
     connection.close()
     
-    # record = util.run_and_fetch_sql(cursor, "insert into basket_a(a, fruit_a)")
-    # if record == -1:
-    #     print('first query failed')
+@app.route('/api/unique')
+def unique():
+    try:
+        connection = psycopg2.connect(
+            user=config.username,
+            password=config.password,
+            host=config.host,
+            port=config.port,
+            database=config.database
+        )
+        cursor = connection.cursor()
+    except(Exception, psycopg2.Error) as error:
+        return render_template('unique.html', log_html = error)
+        
+    try:
+        query = '''
+        SELECT fruit_a as unique_fruits from basket_a LEFT JOIN basket_b on fruit_b=fruit_a WHERE b is NULL 
+        UNION 
+        SELECT fruit_b from basket_b LEFT JOIN basket_a on fruit_a=fruit_b WHERE a is NULL
+        '''
+        cursor.execute(query)
+        col_names = [desc[0] for desc in cursor.description]
+        
+        return render_template('unique.html', sql_table = cursor.fetchall(), table_title = col_names)
+    except(Exception, psycopg2.Error) as error:
+        return render_template('unique.html', log_html = error)
     
-    # record2 = util.run_and_fetch_sql(cursor, "")
-    # if record == -1:
-    #     print('second query failed')
-
-    # record3 = util.run_and_fetch_sql(cursor, "")
-    # if record == -1:
-    #     print('third query failed')
-    
-    
+    cursor.close()
+    connection.close()
         
 if __name__ == '__main__':
     app.debug = True
