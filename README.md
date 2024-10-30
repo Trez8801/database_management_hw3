@@ -6,7 +6,8 @@ Assigment that utilizes Python and Flask to perform multiple PostgreSQL queries.
 - Sabir Khalil
 
 ## Getting Started
-1. Create a virtual environment by typing the following into the terminal ``` python3 -m venv python_venv ```. (If you prefer not to create a virtual environment, continue to step 2)
+1. Create a virtual environment by typing the following into the terminal ``` python3 -m venv python_venv ```.<br>
+<strong>NOTE:</strong> (If you prefer not to create a virtual environment, continue to step 2)
 
 2. Ensure all the necessary packages are installed in your environment by running the following command ``` pip install -r requirements.txt ```. 
 
