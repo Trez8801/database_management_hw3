@@ -14,12 +14,13 @@ def update():
             port=config.port,
             database=config.database
         )
+        connection.autocommit = True
         cursor = connection.cursor()
     except(Exception, psycopg2.Error) as error:
         return render_template('update.html', log_html = error)
         
     try:
-        query = 'INSERT INTO basket_a (a, fruit_a) VALUES (5, \'Cherry\')'
+        query = "INSERT INTO basket_a (a, fruit_a) VALUES (5, 'Cherry')"
         cursor.execute(query)
         return render_template('update.html', log_html = 'Success!')
     except(Exception, psycopg2.Error) as error:
@@ -38,6 +39,7 @@ def unique():
             port=config.port,
             database=config.database
         )
+        connection.autocommit = True
         cursor = connection.cursor()
     except(Exception, psycopg2.Error) as error:
         return render_template('unique.html', log_html = error)
@@ -57,6 +59,30 @@ def unique():
     
     cursor.close()
     connection.close()
+    
+@app.route('/api/view')
+def viewTables():
+    try:
+        connection = psycopg2.connect(
+            user=config.username,
+            password=config.password,
+            host=config.host,
+            port=config.port,
+            database=config.database
+        )
+        cursor = connection.cursor()
+    except(Exception, psycopg2.Error) as error:
+        return render_template('unique.html', log_html = error)
+    
+    try:
+        query = '''
+        SELECT * FROM basket_a
+        '''
+        cursor.execute(query)
+        
+        return render_template('unique.html', log_html = cursor.fetchall())
+    except(Exception, psycopg2.Error) as error:
+        return render_template('unique.html', log_html = error)
         
 if __name__ == '__main__':
     app.debug = True
