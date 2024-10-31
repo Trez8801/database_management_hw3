@@ -14,7 +14,6 @@ def update():
             port=config.port,
             database=config.database
         )
-        connection.autocommit = True
         cursor = connection.cursor()
     except(Exception, psycopg2.Error) as error:
         return render_template('update.html', log_html = error)
@@ -39,16 +38,15 @@ def unique():
             port=config.port,
             database=config.database
         )
-        connection.autocommit = True
         cursor = connection.cursor()
     except(Exception, psycopg2.Error) as error:
         return render_template('unique.html', log_html = error)
         
     try:
         query = '''
-        SELECT fruit_a as unique_fruits from basket_a LEFT JOIN basket_b on fruit_b=fruit_a WHERE b is NULL 
-        UNION 
-        SELECT fruit_b from basket_b LEFT JOIN basket_a on fruit_a=fruit_b WHERE a is NULL
+        SELECT fruit_a as unique_fruits FROM basket_a LEFT JOIN basket_b ON fruit_b = fruit_a WHERE fruit_b is NULL 
+        UNION
+        SELECT fruit_b FROM basket_b LEFT JOIN basket_a ON fruit_b = fruit_a WHERE fruit_a is NULL
         '''
         cursor.execute(query)
         col_names = [desc[0] for desc in cursor.description]
@@ -59,30 +57,7 @@ def unique():
     
     cursor.close()
     connection.close()
-    
-@app.route('/api/view')
-def viewTables():
-    try:
-        connection = psycopg2.connect(
-            user=config.username,
-            password=config.password,
-            host=config.host,
-            port=config.port,
-            database=config.database
-        )
-        cursor = connection.cursor()
-    except(Exception, psycopg2.Error) as error:
-        return render_template('unique.html', log_html = error)
-    
-    try:
-        query = '''
-        SELECT * FROM basket_a
-        '''
-        cursor.execute(query)
-        
-        return render_template('unique.html', log_html = cursor.fetchall())
-    except(Exception, psycopg2.Error) as error:
-        return render_template('unique.html', log_html = error)
+
         
 if __name__ == '__main__':
     app.debug = True
